@@ -1,15 +1,32 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
+import type { DashboardStats } from "@/lib/types";
 import styles from "./dashboard.module.css";
 
 export default function DashboardPage() {
     const router = useRouter();
     const supabase = createClient();
     const [user, setUser] = useState<User | null>(null);
+    const [stats, setStats] = useState<DashboardStats | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    const fetchStats = useCallback(async () => {
+        try {
+            const res = await fetch("/api/analytics");
+            if (res.ok) {
+                const json = await res.json();
+                setStats(json.data);
+            }
+        } catch {
+            // Silently fail — use defaults
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
         supabase.auth.getUser().then(({ data: { user } }) => {
@@ -17,9 +34,10 @@ export default function DashboardPage() {
                 router.push("/login");
             } else {
                 setUser(user);
+                fetchStats();
             }
         });
-    }, [router, supabase.auth]);
+    }, [router, supabase.auth, fetchStats]);
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -28,6 +46,18 @@ export default function DashboardPage() {
     };
 
     if (!user) return null;
+
+    const displayStats = stats || {
+        total_scorings: 0,
+        avg_score: 0,
+        scorings_this_month: 0,
+        scorings_trend: 0,
+        default_rate: 0,
+        total_amount_scored: 0,
+        score_distribution: [],
+        recent_activity: [],
+        risk_breakdown: [],
+    };
 
     return (
         <div className={styles.dashPage}>
@@ -82,23 +112,31 @@ export default function DashboardPage() {
                 <div className={styles.gridStats}>
                     <div className={styles.statCard}>
                         <span className={styles.statIcon}>🧠</span>
-                        <div className={styles.statValue}>1,247</div>
+                        <div className={styles.statValue}>
+                            {loading ? "—" : displayStats.total_scorings.toLocaleString()}
+                        </div>
                         <div className={styles.statLabel}>Scores calculés</div>
                     </div>
                     <div className={styles.statCard}>
-                        <span className={styles.statIcon}>💳</span>
-                        <div className={styles.statValue}>342</div>
-                        <div className={styles.statLabel}>Paiements traités</div>
+                        <span className={styles.statIcon}>📊</span>
+                        <div className={styles.statValue}>
+                            {loading ? "—" : displayStats.avg_score}
+                        </div>
+                        <div className={styles.statLabel}>Score moyen</div>
                     </div>
                     <div className={styles.statCard}>
-                        <span className={styles.statIcon}>🛡️</span>
-                        <div className={styles.statValue}>12</div>
-                        <div className={styles.statLabel}>Fraudes bloquées</div>
+                        <span className={styles.statIcon}>📅</span>
+                        <div className={styles.statValue}>
+                            {loading ? "—" : displayStats.scorings_this_month}
+                        </div>
+                        <div className={styles.statLabel}>Ce mois-ci</div>
                     </div>
                     <div className={styles.statCard}>
-                        <span className={styles.statIcon}>📈</span>
-                        <div className={styles.statValue}>89%</div>
-                        <div className={styles.statLabel}>Précision AUC</div>
+                        <span className={styles.statIcon}>⚠️</span>
+                        <div className={styles.statValue}>
+                            {loading ? "—" : `${displayStats.default_rate}%`}
+                        </div>
+                        <div className={styles.statLabel}>Taux de défaut</div>
                     </div>
                 </div>
 
@@ -106,19 +144,23 @@ export default function DashboardPage() {
                     <div className={styles.card}>
                         <h3>Activité récente</h3>
                         <div className={styles.activityList}>
-                            {[
-                                { label: "Score #1247 calculé", time: "il y a 2 min", icon: "🧠" },
-                                { label: "Paiement MTN MoMo traité", time: "il y a 5 min", icon: "💳" },
-                                { label: "Tentative de fraude bloquée", time: "il y a 12 min", icon: "🛡️" },
-                                { label: "Score #1246 calculé", time: "il y a 18 min", icon: "🧠" },
-                                { label: "Paiement Orange Money traité", time: "il y a 23 min", icon: "💳" },
-                            ].map((item, i) => (
-                                <div key={i} className={styles.activityItem}>
-                                    <span className={styles.activityIcon}>{item.icon}</span>
-                                    <span className={styles.activityLabel}>{item.label}</span>
-                                    <span className={styles.activityTime}>{item.time}</span>
+                            {displayStats.recent_activity.length === 0 ? (
+                                <div className={styles.activityItem}>
+                                    <span className={styles.activityIcon}>📭</span>
+                                    <span className={styles.activityLabel}>Aucune activité pour le moment</span>
+                                    <span className={styles.activityTime}>—</span>
                                 </div>
-                            ))}
+                            ) : (
+                                displayStats.recent_activity.slice(0, 5).map((item, i) => (
+                                    <div key={i} className={styles.activityItem}>
+                                        <span className={styles.activityIcon}>🧠</span>
+                                        <span className={styles.activityLabel}>{item.title}</span>
+                                        <span className={styles.activityTime}>
+                                            {new Date(item.timestamp).toLocaleDateString("fr-FR")}
+                                        </span>
+                                    </div>
+                                ))
+                            )}
                         </div>
                     </div>
 
