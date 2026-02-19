@@ -1,0 +1,310 @@
+/* Dashboard — Liquid Glass Edition */
+
+.dashPage {
+    display: flex;
+    min-height: 100vh;
+    background: var(--bg-secondary);
+}
+
+/* ─── Sidebar ─── */
+.sidebar {
+    width: 260px;
+    min-height: 100vh;
+    background: var(--bg-glass-strong);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-right: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-6);
+    position: sticky;
+    top: 0;
+}
+
+.sidebarLogo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-3);
+    margin-bottom: var(--space-8);
+}
+
+.logoMark {
+    width: 38px;
+    height: 38px;
+    background: var(--gradient-turquoise);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 1rem;
+    color: white;
+}
+
+.logoText {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.logoAccent {
+    color: var(--turquoise-500);
+}
+
+.sidebarNav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    flex: 1;
+}
+
+.navItem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all var(--duration-fast) var(--ease-smooth);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.navItem:hover {
+    background: var(--grey-100);
+    color: var(--text-primary);
+}
+
+.navItem.active {
+    background: var(--turquoise-50);
+    color: var(--turquoise-700);
+    font-weight: 600;
+}
+
+.navIcon {
+    font-size: 1.1rem;
+}
+
+.logoutBtn {
+    margin-top: auto;
+    padding: var(--space-3) var(--space-4);
+    border: 1.5px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    background: var(--bg-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-smooth);
+}
+
+.logoutBtn:hover {
+    border-color: #F87171;
+    color: #EF4444;
+    background: #FEF2F2;
+}
+
+/* ─── Main Content ─── */
+.main {
+    flex: 1;
+    padding: var(--space-8);
+    overflow-y: auto;
+}
+
+.header {
+    margin-bottom: var(--space-8);
+}
+
+.header h1 {
+    font-size: var(--text-2xl);
+    font-weight: 800;
+    margin-bottom: var(--space-1);
+}
+
+.header p {
+    font-size: var(--text-sm);
+    color: var(--text-tertiary);
+}
+
+/* ─── Stats Grid ─── */
+.gridStats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-5);
+    margin-bottom: var(--space-8);
+}
+
+.statCard {
+    background: var(--bg-glass-strong);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    transition: all var(--duration-base) var(--ease-spring);
+}
+
+.statCard:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.statIcon {
+    font-size: 1.5rem;
+}
+
+.statValue {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+.statLabel {
+    font-size: var(--text-sm);
+    color: var(--text-tertiary);
+}
+
+/* ─── Cards Grid ─── */
+.gridCards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+}
+
+.card {
+    background: var(--bg-glass-strong);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-6);
+}
+
+.card h3 {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Activity */
+.activityList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.activityItem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+    transition: background var(--duration-fast) var(--ease-smooth);
+}
+
+.activityItem:hover {
+    background: var(--grey-50);
+}
+
+.activityIcon {
+    font-size: 1rem;
+}
+
+.activityLabel {
+    flex: 1;
+    font-size: var(--text-sm);
+    color: var(--text-primary);
+}
+
+.activityTime {
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+}
+
+/* Modules */
+.modulesList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.moduleItem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+    transition: background var(--duration-fast) var(--ease-smooth);
+}
+
+.moduleItem:hover {
+    background: var(--grey-50);
+}
+
+.moduleDot {
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-full);
+}
+
+.moduleName {
+    flex: 1;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.moduleStatus {
+    font-size: var(--text-xs);
+    font-weight: 600;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 1024px) {
+    .gridStats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .gridCards {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashPage {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+        position: relative;
+        padding: var(--space-4);
+    }
+
+    .sidebarNav {
+        flex-direction: row;
+        overflow-x: auto;
+        gap: var(--space-2);
+    }
+
+    .logoutBtn {
+        display: none;
+    }
+
+    .gridStats {
+        grid-template-columns: 1fr 1fr;
+    }
+}
